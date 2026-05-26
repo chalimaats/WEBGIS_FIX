@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <script src="data.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geumjeong-gu WebGIS - Persebaran Sekolah & Aksesibilitas Transportasi</title>
+    <meta name="description"
+        content="Peta WebGIS Interaktif analisis persebaran sekolah dan akses transportasi di Geumjeong-gu, Busan, Korea Selatan.">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts via import in CSS, but fallback here -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-theme="dark">
+
+    <div class="app-container">
+
+        <!-- Sidebar Panel (Glassmorphism Sidebar) -->
+        <aside class="sidebar glass" id="sidebar">
+
+            <!-- Header Brand -->
+            <div class="sidebar-header">
+                <div class="brand-wrapper">
+                    <div class="brand">
+                        <div class="brand-icon">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div class="brand-title">
+                            <h1>Busan WebGIS</h1>
+                            <p>Geumjeong-gu Access</p>
+                        </div>
+                    </div>
+                    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-sun" id="theme-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+
+                <!-- Section 1: Accessibility Controls -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-sliders"></i> Kontrol Aksesibilitas
+                    </div>
+
+                    <!-- Slider Card -->
+                    <div class="control-card">
+                        <div class="slider-header">
+                            <span class="slider-label">Jarak Akses Maksimum</span>
+                            <span class="slider-value-badge" id="slider-value">1000 m</span>
+                        </div>
+                        <input type="range" id="threshold-slider" class="slider-element" min="200" max="3000" step="50"
+                            value="1000">
+                        <div class="slider-limits">
+                            <span>200 m (Sangat Dekat)</span>
+                            <span>3000 m (Jauh)</span>
+                        </div>
+                    </div>
+
+                    <!-- Layer Toggles -->
+                    <div class="layer-toggles-grid" style="margin-top: 14px;">
+                        <div class="toggle-btn active" data-layer="boundary" id="btn-layer-boundary">
+                            <i class="fa-solid fa-border-none"></i>
+                            <span>Batas Wilayah</span>
+                        </div>
+                        <div class="toggle-btn active" data-layer="schools" id="btn-layer-schools">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Sekolah</span>
+                        </div>
+                        <div class="toggle-btn active" data-layer="railway" id="btn-layer-railway">
+                            <i class="fa-solid fa-train-track"></i>
+                            <span>Rel Kereta</span>
+                        </div>
+                        <div class="toggle-btn active" data-layer="stations" id="btn-layer-stations">
+                            <i class="fa-solid fa-subway"></i>
+                            <span>Stasiun Transit</span>
+                        </div>
+                        <div class="toggle-btn" data-layer="buffers" id="btn-layer-buffers"
+                            style="grid-column: span 2;">
+                            <i class="fa-solid fa-circle-dot"></i>
+                            <span>Tampilkan Buffer Jangkauan (Dynamic)</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Spatial Statistics -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-chart-simple"></i> Statistik & Aksesbilitas
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card cyan">
+                            <span class="stat-label">Total Sekolah</span>
+                            <span class="stat-value" id="stat-total-schools">6</span>
+                            <span class="stat-sub">Di wilayah analisis</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Poin Transit</span>
+                            <span class="stat-value" id="stat-total-transit">7</span>
+                            <span class="stat-sub">Stasiun & Terminal</span>
+                        </div>
+                        <div class="stat-card success" id="stat-access-card">
+                            <span class="stat-label">Akses Adekuat</span>
+                            <span class="stat-value" id="stat-accessible-schools">0</span>
+                            <span class="stat-sub" id="stat-access-pct">0% sekolah</span>
+                        </div>
+                        <div class="stat-card danger" id="stat-avg-card">
+                            <span class="stat-label">Rata-rata Jarak</span>
+                            <span class="stat-value" id="stat-avg-distance">0 m</span>
+                            <span class="stat-sub">Ke stasiun terdekat</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Charts & Analytical Summary -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> Visualisasi & Analisis
+                    </div>
+
+                    <div class="chart-container" style="margin-bottom: 14px;">
+                        <div class="chart-wrapper">
+                            <canvas id="accessChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Insight Box -->
+                    <div class="insight-box" id="dynamic-insight">
+                        Memuat analisis spasial...
+                    </div>
+                </section>
+
+            </div>
+        </aside>
+
+        <!-- Map and Overlay Section -->
+        <main class="map-container">
+
+            <!-- Map Container -->
+            <div id="map"></div>
+
+            <!-- Floating Custom Map Control Buttons -->
+            <div class="map-controls-group">
+                <button class="map-btn" id="btn-zoom-home" title="Zoom to Geumjeong-gu">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+                <button class="map-btn" id="btn-toggle-basemap" title="Switch Basemap (OSM / Dark / Satellite)">
+                    <i class="fa-solid fa-layer-group"></i>
+                </button>
+                <button class="map-btn" id="btn-toggle-legend" title="Toggle Legend">
+                    <i class="fa-solid fa-legend"></i>
+                    <i class="fa-solid fa-list-ul"></i>
+                </button>
+            </div>
+
+            <!-- Bottom Panel: Collapsible Table Overlay -->
+            <div class="bottom-panel-overlay" id="bottom-panel">
+                <div class="panel-header" id="panel-header-btn">
+                    <div class="panel-title">
+                        <i class="fa-solid fa-table-list"></i> Daftar Detail Sekolah & Jarak Akses Transportasi
+                    </div>
+                    <button class="panel-toggle-btn" id="panel-toggle-arrow">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <table class="school-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Sekolah</th>
+                                <th>Tingkat (ISCED)</th>
+                                <th>Stasiun Terdekat</th>
+                                <th>Jarak Spasial</th>
+                                <th>Estimasi Waktu Jalan</th>
+                                <th>Status Aksesbilitas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="school-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Chart.js for beautiful charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Turf.js for advanced GIS calculations and Buffering -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+    <!-- Custom Application Logic JS -->
+    <script src="app.js"></script>
+</body>
+
+</html>
