@@ -35,13 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedSchoolId: null
     };
 
-    // GeoJSON File Paths
-    const PATHS = {
-        boundary: './geumjeong boundary_geojson.geojson',
-        schools: './education_geumjenong.geojson',
-        railway: './railway_geumjeong.geojson',
-        trainStations: './train station_geumjeong.geojson',
-        busStations: './bus station_geumjeong.geojson'
+   const PATHS = {
+      boundary: './data/buffered_geojson.geojson',
+      schools: './data/education_geumjeong.geojson',
+      railway: './data/railway_geumjeong.geojson',
+      trainStations: './data/train_station_geumjeong.geojson',
+      busStations: './data/bus_station_geumjeong.geojson'
     };
 
     // Translation maps for schools and levels
