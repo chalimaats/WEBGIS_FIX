@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "bus station_geumjeong",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 1, "osm_id": 1430562320, "osm_type": "nodes", "amenity": "bus_station", "operator": null, "public_tra": "station", "building": null, "name": "부산종합버스터미널" }, "geometry": { "type": "Point", "coordinates": [ 129.095460300000013, 35.2847366 ] } }
+]
+}

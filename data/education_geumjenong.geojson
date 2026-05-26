@@ -1,0 +1,126 @@
+{
+    "type": "FeatureCollection",
+    "name": "education_geumjenong",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+        }
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 1,
+                "osm_id": 4643365703,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "금사나너울 지역아동센터",
+                "amenity": "school",
+                "isced_leve": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.1118272,
+                    35.2201182
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 2,
+                "osm_id": 1781288664,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "금사초등학교",
+                "amenity": "school",
+                "isced_leve": "1"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.1094711,
+                    35.2196327
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 3,
+                "osm_id": 1781306076,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "금사중학교",
+                "amenity": "school",
+                "isced_leve": "2"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.1059574,
+                    35.2212958
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 4,
+                "osm_id": 368923212,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "예원여자고등학교",
+                "amenity": "school",
+                "isced_leve": "3"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.1142307,
+                    35.225672
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 5,
+                "osm_id": 1781306070,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "금정전자공업고등학교",
+                "amenity": "school",
+                "isced_leve": "3"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.108215800000011,
+                    35.2217647
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 6,
+                "osm_id": 4643365653,
+                "osm_type": "nodes",
+                "capacity": null,
+                "name": "예원여자중학교",
+                "amenity": "school",
+                "isced_leve": "2"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    129.1158006,
+                    35.2298881
+                ]
+            }
+        }
+    ]
+}
